@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Modern — Restaurant at MoMA</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Libre+Baskerville:ital@0;1&family=Jost:wght@200;300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #1a1410;
+    --parchment: #f5f0e8;
+    --warm-white: #faf8f4;
+    --gold: #b8965a;
+    --gold-light: #d4b07a;
+    --gold-pale: #e8d9bb;
+    --charcoal: #2e2a24;
+    --muted: #7a7168;
+    --line: rgba(184,150,90,0.25);
+    --serif: 'Cormorant Garamond', serif;
+    --body: 'Libre Baskerville', serif;
+    --sans: 'Jost', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--warm-white);
+    color: var(--ink);
+    font-family: var(--body);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom cursor */
+  .cursor {
+    position: fixed;
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.15s ease, opacity 0.2s;
+    transform: translate(-50%, -50%);
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 32px; height: 32px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.2s;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 28px 56px;
+    mix-blend-mode: normal;
+    transition: background 0.4s, padding 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(250,248,244,0.96);
+    backdrop-filter: blur(12px);
+    padding: 18px 56px;
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-logo {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--warm-white);
+    text-decoration: none;
+    transition: color 0.4s;
+  }
+  nav.scrolled .nav-logo { color: var(--ink); }
+  .nav-links {
+    display: flex; gap: 40px; list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.85);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  nav.scrolled .nav-links a { color: var(--muted); }
+  .nav-links a:hover { color: var(--gold) !important; }
+  .nav-reserve {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--ink);
+    background: var(--gold);
+    padding: 10px 24px;
+    text-decoration: none;
+    transition: background 0.3s, color 0.3s;
+  }
+  .nav-reserve:hover { background: var(--gold-light); }
+  nav.scrolled .nav-reserve { color: var(--ink); }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    height: 100vh;
+    min-height: 700px;
+    display: flex; align-items: flex-end;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: linear-gradient(160deg, #1a1108 0%, #2d2316 40%, #1a1108 100%);
+  }
+  /* Geometric art-inspired overlay */
+  .hero-geo {
+    position: absolute; inset: 0;
+    overflow: hidden;
+  }
+  .hero-geo::before {
+    content: '';
+    position: absolute;
+    top: -10%; left: 55%;
+    width: 60vw; height: 120vh;
+    background: linear-gradient(135deg, rgba(184,150,90,0.08) 0%, rgba(184,150,90,0.02) 100%);
+    transform: skewX(-8deg);
+    border-left: 1px solid rgba(184,150,90,0.15);
+  }
+  .hero-geo::after {
+    content: '';
+    position: absolute;
+    top: 20%; right: 8%;
+    width: 1px; height: 45vh;
+    background: linear-gradient(to bottom, transparent, rgba(184,150,90,0.4), transparent);
+  }
+  .hero-circle {
+    position: absolute;
+    top: 15%; right: 18%;
+    width: 280px; height: 280px;
+    border-radius: 50%;
+    border: 1px solid rgba(184,150,90,0.12);
+    animation: pulse-ring 6s ease-in-out infinite;
+  }
+  .hero-circle::before {
+    content: '';
+    position: absolute;
+    inset: 30px;
+    border-radius: 50%;
+    border: 1px solid rgba(184,150,90,0.08);
+    animation: pulse-ring 6s ease-in-out 1s infinite;
+  }
+  @keyframes pulse-ring {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.04); opacity: 0.6; }
+  }
+  .michelin-badge {
+    position: absolute;
+    top: 18%; right: 18%;
+    width: 280px; height: 280px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 6px;
+    animation: fade-in 2s 1s both;
+  }
+  .michelin-stars { color: var(--gold); font-size: 1.1rem; letter-spacing: 8px; }
+  .michelin-text {
+    font-family: var(--sans);
+    font-size: 0.58rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: rgba(184,150,90,0.7);
+  }
+
+  .hero-content {
+    position: relative; z-index: 2;
+    padding: 0 56px 80px;
+    animation: hero-rise 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
+  }
+  @keyframes hero-rise {
+    from { transform: translateY(40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    font-weight: 300;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: block;
+    width: 40px; height: 1px;
+    background: var(--gold);
+    opacity: 0.6;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(4.5rem, 10vw, 9rem);
+    font-weight: 300;
+    line-height: 0.9;
+    color: var(--warm-white);
+    letter-spacing: -0.01em;
+    margin-bottom: 32px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold-pale);
+    display: block;
+  }
+  .hero-sub {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 200;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    max-width: 360px;
+    line-height: 2;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; right: 56px;
+    display: flex; align-items: center; gap: 12px;
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.35);
+    animation: fade-in 2s 2s both;
+  }
+  .hero-scroll-line {
+    width: 48px; height: 1px;
+    background: rgba(255,255,255,0.25);
+    position: relative; overflow: hidden;
+  }
+  .hero-scroll-line::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: var(--gold);
+    animation: scroll-line 2s ease-in-out 2s infinite;
+  }
+  @keyframes scroll-line {
+    to { left: 100%; }
+  }
+  @keyframes fade-in {
+    from { opacity: 0; } to { opacity: 1; }
+  }
+
+  /* ── INTRO STRIP ── */
+  .intro-strip {
+    background: var(--gold);
+    padding: 20px 56px;
+    display: flex; align-items: center; gap: 48px;
+    overflow: hidden;
+  }
+  .strip-item {
+    display: flex; align-items: center; gap: 16px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .strip-dot {
+    width: 4px; height: 4px;
+    border-radius: 50%;
+    background: var(--ink);
+    opacity: 0.4;
+  }
+  .strip-text {
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  /* ── SECTION COMMONS ── */
+  section { position: relative; }
+  .section-label {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    font-weight: 300;
+    letter-spacing: 0.45em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--gold);
+    opacity: 0.7;
+    flex-shrink: 0;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .divider {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+    margin: 0 auto;
+  }
+
+  /* ── PHILOSOPHY ── */
+  .philosophy {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 80vh;
+  }
+  .philosophy-text {
+    padding: 100px 80px 100px 56px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative;
+  }
+  .philosophy-text::after {
+    content: '';
+    position: absolute;
+    top: 60px; bottom: 60px; right: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--line), var(--line), transparent);
+  }
+  .philosophy-text h2 { font-size: clamp(2.6rem, 4vw, 4rem); margin-bottom: 36px; }
+  .philosophy-text h2 em { font-style: italic; color: var(--gold); }
+  .philosophy-text p {
+    font-size: 0.88rem;
+    line-height: 2.1;
+    color: var(--charcoal);
+    max-width: 440px;
+    margin-bottom: 20px;
+  }
+  .philosophy-visual {
+    background: var(--parchment);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .phil-art {
+    position: relative;
+    width: 320px; height: 420px;
+  }
+  .phil-art-rect {
+    position: absolute;
+    border: 1px solid var(--gold-pale);
+    animation: float-rect 8s ease-in-out infinite;
+  }
+  .phil-art-rect:nth-child(1) { inset: 0; animation-delay: 0s; }
+  .phil-art-rect:nth-child(2) { inset: 20px 20px 20px 80px; animation-delay: 1s; }
+  .phil-art-rect:nth-child(3) { inset: 60px; animation-delay: 2s; border-style: dashed; opacity: 0.5; }
+  .phil-inner-text {
+    position: absolute;
+    inset: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; gap: 10px;
+  }
+  .phil-year {
+    font-family: var(--serif);
+    font-size: 5rem;
+    font-weight: 300;
+    color: var(--gold-pale);
+    line-height: 1;
+    opacity: 0.6;
+  }
+  .phil-caption {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  @keyframes float-rect {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* ── EXPERIENCES ── */
+  .experiences {
+    padding: 120px 56px;
+    background: var(--ink);
+  }
+  .exp-header {
+    display: flex; align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 72px;
+  }
+  .exp-header h2 {
+    font-size: clamp(2.5rem, 4vw, 3.6rem);
+    color: var(--warm-white);
+  }
+  .exp-header h2 em { font-style: italic; color: var(--gold); }
+  .exp-tagline {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 200;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    max-width: 260px;
+    text-align: right;
+    line-height: 1.8;
+  }
+  .exp-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 2px;
+  }
+  .exp-card {
+    position: relative;
+    padding: 52px 40px;
+    background: #221e16;
+    overflow: hidden;
+    cursor: none;
+    transition: background 0.5s;
+  }
+  .exp-card:hover { background: #2d2820; }
+  .exp-card-num {
+    font-family: var(--serif);
+    font-size: 5rem;
+    font-weight: 300;
+    color: rgba(184,150,90,0.08);
+    position: absolute;
+    top: 20px; right: 24px;
+    line-height: 1;
+    transition: color 0.5s;
+  }
+  .exp-card:hover .exp-card-num { color: rgba(184,150,90,0.14); }
+  .exp-card-label {
+    font-family: var(--sans);
+    font-size: 0.58rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .exp-card h3 {
+    font-family: var(--serif);
+    font-size: 1.9rem;
+    font-weight: 300;
+    color: var(--warm-white);
+    line-height: 1.2;
+    margin-bottom: 20px;
+  }
+  .exp-card h3 em { font-style: italic; }
+  .exp-card p {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 200;
+    line-height: 1.9;
+    color: rgba(255,255,255,0.45);
+    max-width: 320px;
+    margin-bottom: 36px;
+  }
+  .exp-card-price {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--gold-pale);
+    margin-bottom: 8px;
+  }
+  .exp-card-price-note {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+  }
+  .exp-card-line {
+    position: absolute;
+    bottom: 0; left: 0;
+    height: 2px; width: 0;
+    background: var(--gold);
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .exp-card:hover .exp-card-line { width: 100%; }
+  .exp-card.featured {
+    background: #2a2218;
+    border: 1px solid rgba(184,150,90,0.15);
+  }
+  .exp-card.featured:hover { background: #332b1e; }
+
+  /* ── ACCOLADES ── */
+  .accolades {
+    padding: 100px 56px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .acc-item {
+    padding: 52px 40px;
+    background: var(--warm-white);
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 12px;
+  }
+  .acc-icon {
+    font-size: 1.6rem;
+    margin-bottom: 8px;
+  }
+  .acc-val {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .acc-label {
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── CHEF ── */
+  .chef {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background: var(--parchment);
+  }
+  .chef-visual {
+    position: relative;
+    min-height: 600px;
+    background: var(--charcoal);
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .chef-abstract {
+    position: relative;
+    width: 300px; height: 400px;
+  }
+  .chef-stroke {
+    position: absolute;
+    background: rgba(184,150,90,0.15);
+    border-radius: 2px;
+  }
+  .chef-stroke:nth-child(1) { width: 2px; height: 100%; left: 30%; top: 0; animation: chef-anim 4s ease-in-out infinite; }
+  .chef-stroke:nth-child(2) { width: 100%; height: 2px; top: 40%; left: 0; animation: chef-anim 4s ease-in-out 0.5s infinite; }
+  .chef-stroke:nth-child(3) { width: 2px; height: 60%; right: 20%; top: 20%; opacity: 0.5; animation: chef-anim 4s ease-in-out 1s infinite; }
+  .chef-stroke:nth-child(4) { width: 50%; height: 2px; top: 70%; left: 10%; opacity: 0.4; animation: chef-anim 4s ease-in-out 1.5s infinite; }
+  .chef-monogram {
+    position: absolute;
+    font-family: var(--serif);
+    font-size: 8rem;
+    font-weight: 300;
+    color: rgba(184,150,90,0.1);
+    letter-spacing: -0.05em;
+    user-select: none;
+  }
+  @keyframes chef-anim {
+    0%, 100% { opacity: 0.15; transform: scaleY(1); }
+    50% { opacity: 0.35; transform: scaleY(1.05); }
+  }
+  .chef-content {
+    padding: 100px 80px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .chef-content h2 { font-size: clamp(2.2rem, 3.5vw, 3.2rem); margin-bottom: 8px; }
+  .chef-content h2 em { font-style: italic; color: var(--gold); }
+  .chef-name {
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 36px;
+  }
+  .chef-content p {
+    font-size: 0.88rem;
+    line-height: 2.1;
+    color: var(--charcoal);
+    max-width: 420px;
+    margin-bottom: 20px;
+  }
+  .chef-signature {
+    font-family: var(--serif);
+    font-size: 2.4rem;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--gold);
+    margin-top: 20px;
+    opacity: 0.8;
+  }
+
+  /* ── HOURS ── */
+  .hours {
+    padding: 100px 56px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 80px;
+    align-items: start;
+    border-top: 1px solid var(--line);
+  }
+  .hours h2 { font-size: clamp(2rem, 3vw, 2.8rem); }
+  .hours-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+  .hours-block h4 {
+    font-family: var(--sans);
+    font-size: 0.65rem;
+    font-weight: 400;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .hours-row {
+    display: flex; justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(184,150,90,0.08);
+  }
+  .hours-day {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--charcoal);
+  }
+  .hours-time {
+    font-family: var(--body);
+    font-size: 0.75rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  /* ── FIND US ── */
+  .find-us {
+    background: var(--ink);
+    padding: 100px 56px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .find-us h2 {
+    font-size: clamp(2.2rem, 3.5vw, 3rem);
+    color: var(--warm-white);
+    margin-bottom: 36px;
+  }
+  .find-us h2 em { font-style: italic; color: var(--gold); }
+  .contact-item {
+    padding: 24px 0;
+    border-bottom: 1px solid rgba(184,150,90,0.12);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .contact-label {
+    font-family: var(--sans);
+    font-size: 0.58rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .contact-val {
+    font-family: var(--body);
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.7);
+    font-style: italic;
+  }
+  .map-placeholder {
+    position: relative;
+    height: 380px;
+    background: #1e1a12;
+    border: 1px solid rgba(184,150,90,0.1);
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .map-grid-line {
+    position: absolute;
+    background: rgba(184,150,90,0.06);
+  }
+  .map-crosshair {
+    width: 40px; height: 40px;
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .map-crosshair::before, .map-crosshair::after {
+    content: '';
+    position: absolute;
+    background: var(--gold);
+  }
+  .map-crosshair::before { width: 1px; height: 100%; }
+  .map-crosshair::after { width: 100%; height: 1px; }
+  .map-dot {
+    width: 10px; height: 10px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 20px rgba(184,150,90,0.4);
+    position: relative; z-index: 1;
+  }
+  .map-pulse {
+    position: absolute;
+    width: 10px; height: 10px;
+    border: 1px solid var(--gold);
+    border-radius: 50%;
+    animation: map-pulse 2.5s ease-out infinite;
+  }
+  @keyframes map-pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(6); opacity: 0; }
+  }
+  .map-label {
+    position: absolute;
+    bottom: 24px; left: 24px;
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+  .map-label span { color: var(--gold); }
+
+  /* ── CTA ── */
+  .cta-band {
+    padding: 80px 56px;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cta-band h2 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 3vw, 2.8rem);
+    font-weight: 300;
+    color: var(--ink);
+  }
+  .cta-band h2 em { font-style: italic; }
+  .cta-btn {
+    display: inline-flex; align-items: center; gap: 16px;
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 300;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--ink);
+    text-decoration: none;
+    border: 1px solid rgba(0,0,0,0.2);
+    padding: 16px 36px;
+    transition: background 0.3s, border-color 0.3s;
+    background: transparent;
+    cursor: none;
+  }
+  .cta-btn:hover { background: rgba(0,0,0,0.08); border-color: transparent; }
+  .cta-btn-arrow {
+    width: 20px; height: 1px;
+    background: var(--ink);
+    position: relative; overflow: visible;
+  }
+  .cta-btn-arrow::after {
+    content: '';
+    position: absolute;
+    right: 0; top: -3px;
+    width: 7px; height: 7px;
+    border-top: 1px solid var(--ink);
+    border-right: 1px solid var(--ink);
+    transform: rotate(45deg);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: #0e0b07;
+    padding: 60px 56px 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+  }
+  .footer-brand {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 300;
+    color: var(--warm-white);
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
+  }
+  .footer-sub {
+    font-family: var(--sans);
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .footer-links h5 {
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 20px;
+  }
+  .footer-links ul { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+  .footer-links a {
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    font-weight: 200;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-bottom {
+    grid-column: 1 / -1;
+    padding-top: 32px;
+    margin-top: 16px;
+    border-top: 1px solid rgba(184,150,90,0.1);
+    display: flex; justify-content: space-between;
+    font-family: var(--sans);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.2);
+  }
+
+  /* ── MOBILE RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 20px 24px; }
+    nav.scrolled { padding: 14px 24px; }
+    .nav-links { display: none; }
+    .nav-reserve { padding: 8px 16px; font-size: 0.65rem; }
+
+    .hero-content { padding: 0 24px 60px; }
+    .hero-eyebrow { font-size: 0.58rem; }
+    h1 { font-size: clamp(3.5rem, 16vw, 5.5rem); }
+    .hero-scroll { right: 24px; }
+    .hero-circle { width: 160px; height: 160px; top: 12%; right: 8%; }
+    .michelin-badge { width: 160px; height: 160px; top: 12%; right: 8%; }
+    .michelin-stars { font-size: 0.85rem; letter-spacing: 4px; }
+    .michelin-text { font-size: 0.5rem; }
+
+    .intro-strip { gap: 20px; padding: 16px 24px; overflow-x: auto; }
+    .strip-text { font-size: 0.58rem; }
+
+    .philosophy { grid-template-columns: 1fr; }
+    .philosophy-text { padding: 60px 24px; }
+    .philosophy-text::after { display: none; }
+    .philosophy-visual { min-height: 300px; }
+    .phil-art { width: 200px; height: 260px; }
+    .phil-year { font-size: 4rem; }
+
+    .experiences { padding: 60px 24px; }
+    .exp-header { flex-direction: column; align-items: flex-start; gap: 16px; margin-bottom: 40px; }
+    .exp-tagline { text-align: left; }
+    .exp-grid { grid-template-columns: 1fr; gap: 2px; }
+    .exp-card { padding: 36px 28px; }
+
+    .accolades { grid-template-columns: 1fr 1fr; padding: 60px 24px; gap: 1px; }
+    .acc-item { padding: 36px 20px; }
+
+    .chef { grid-template-columns: 1fr; }
+    .chef-visual { min-height: 240px; order: 2; }
+    .chef-content { padding: 60px 24px; order: 1; }
+
+    .hours { grid-template-columns: 1fr; padding: 60px 24px; gap: 40px; }
+    .hours-grid { grid-template-columns: 1fr; gap: 28px; }
+
+    .find-us { grid-template-columns: 1fr; padding: 60px 24px; gap: 48px; }
+    .map-placeholder { height: 260px; }
+
+    .cta-band { flex-direction: column; gap: 28px; padding: 60px 24px; text-align: center; }
+    .cta-band h2 { font-size: clamp(1.6rem, 6vw, 2rem); }
+
+    footer { grid-template-columns: 1fr; padding: 48px 24px 32px; gap: 36px; }
+    .footer-bottom { flex-direction: column; gap: 8px; text-align: center; }
+  }
+
+  /* ── SCROLL ANIMATIONS ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: none;
+  }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.35s; }
+  .reveal-delay-4 { transition-delay: 0.5s; }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">The Modern</a>
+  <ul class="nav-links">
+    <li><a href="#experiences">Experiences</a></li>
+    <li><a href="#chef">Chef</a></li>
+    <li><a href="#hours">Hours</a></li>
+    <li><a href="#visit">Visit</a></li>
+  </ul>
+  <a href="https://resy.com" target="_blank" class="nav-reserve">Reserve</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-geo"></div>
+  <div class="hero-circle"></div>
+  <div class="michelin-badge">
+    <div class="michelin-stars">★ ★</div>
+    <div class="michelin-text">Michelin Starred</div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">At the Museum of Modern Art · New York</p>
+    <h1>The<em>Modern</em></h1>
+    <p class="hero-sub">Contemporary American cuisine at the heart of art, culture & imagination</p>
+  </div>
+  <div class="hero-scroll">
+    <div class="hero-scroll-line"></div>
+    Explore
+  </div>
+</section>
+
+<!-- INTRO STRIP -->
+<div class="intro-strip">
+  <div class="strip-item"><span class="strip-text">Two Michelin Stars</span></div>
+  <div class="strip-dot"></div>
+  <div class="strip-item"><span class="strip-text">New York Times ✦✦✦</span></div>
+  <div class="strip-dot"></div>
+  <div class="strip-item"><span class="strip-text">Four James Beard Awards</span></div>
+  <div class="strip-dot"></div>
+  <div class="strip-item"><span class="strip-text">Wine Spectator Grand Award</span></div>
+  <div class="strip-dot"></div>
+  <div class="strip-item"><span class="strip-text">Relais & Châteaux</span></div>
+  <div class="strip-dot"></div>
+  <div class="strip-item"><span class="strip-text">Est. 2005</span></div>
+  <div class="strip-dot"></div>
+  <div class="strip-item"><span class="strip-text">9 West 53rd Street · Midtown Manhattan</span></div>
+</div>
+
+<!-- PHILOSOPHY -->
+<section class="philosophy">
+  <div class="philosophy-text">
+    <p class="section-label reveal">Our Philosophy</p>
+    <h2 class="reveal reveal-delay-1">Where <em>art</em> meets the art of dining</h2>
+    <p class="reveal reveal-delay-2">Nestled within one of the world's great museums, The Modern is conceived as a dining experience inseparable from its surroundings — a restaurant that breathes the same air as Picasso, Matisse, and Warhol.</p>
+    <p class="reveal reveal-delay-2">Executive Chef Thomas Allan's cooking is refined, seasonal, and unexpectedly playful — a cuisine that rewards the curious palate with moments of genuine discovery, much like the galleries next door.</p>
+    <p class="reveal reveal-delay-3">Overlooking the serene Abby Aldrich Rockefeller Sculpture Garden, every meal here is framed by beauty.</p>
+  </div>
+  <div class="philosophy-visual">
+    <div class="phil-art reveal reveal-delay-2">
+      <div class="phil-art-rect"></div>
+      <div class="phil-art-rect"></div>
+      <div class="phil-art-rect"></div>
+      <div class="phil-inner-text">
+        <div class="phil-year">2005</div>
+        <div class="phil-caption">Established at MoMA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCES -->
+<section class="experiences" id="experiences">
+  <div class="exp-header">
+    <div>
+      <p class="section-label reveal" style="--gold: rgba(184,150,90,0.8);">— Three Distinct Experiences</p>
+      <h2 class="reveal reveal-delay-1">Choose your <em>table</em></h2>
+    </div>
+    <p class="exp-tagline reveal reveal-delay-2">Every setting offers a unique expression of Chef Allan's vision</p>
+  </div>
+  <div class="exp-grid">
+    <div class="exp-card featured reveal">
+      <div class="exp-card-num">01</div>
+      <p class="exp-card-label">Flagship</p>
+      <h3>The <em>Modern</em></h3>
+      <p>The main dining room overlooks MoMA's Sculpture Garden. Chef Allan's bold tasting menus — offered at both lunch and dinner — invite you through a procession of seasonal courses with moments of surprise.</p>
+      <div class="exp-card-price">From $195 <span style="font-size:0.75rem; color: var(--muted)">/ person</span></div>
+      <div class="exp-card-price-note">Tasting menu · Prix fixe options available</div>
+      <div class="exp-card-line"></div>
+    </div>
+    <div class="exp-card reveal reveal-delay-1">
+      <div class="exp-card-num">02</div>
+      <p class="exp-card-label">À La Carte</p>
+      <h3>The Bar <em>Room</em></h3>
+      <p>A lively, convivial space with marble bar, lounge seating, and terrace. Seasonal cooking à la carte, award-winning cocktails, and a curated wine list.</p>
+      <div class="exp-card-price">Walk-ins welcome</div>
+      <div class="exp-card-price-note">Also on The Terrace · Weather permitting</div>
+      <div class="exp-card-line"></div>
+    </div>
+    <div class="exp-card reveal reveal-delay-2">
+      <div class="exp-card-num">03</div>
+      <p class="exp-card-label">Exclusive</p>
+      <h3>The Kitchen <em>Table</em></h3>
+      <p>Front-row seats inside the kitchen for up to four guests. An enhanced tasting menu crafted personally by Chef Allan, with a window into every detail of preparation.</p>
+      <div class="exp-card-price">$325 / person</div>
+      <div class="exp-card-price-note">Pre-paid · 4 guests maximum</div>
+      <div class="exp-card-line"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ACCOLADES -->
+<div class="accolades">
+  <div class="acc-item reveal">
+    <div class="acc-icon">★★</div>
+    <div class="acc-val">Michelin</div>
+    <div class="acc-label">Two Stars<br>since 2009</div>
+  </div>
+  <div class="acc-item reveal reveal-delay-1">
+    <div class="acc-icon">✦✦✦</div>
+    <div class="acc-val">NYT</div>
+    <div class="acc-label">Three Star<br>Review</div>
+  </div>
+  <div class="acc-item reveal reveal-delay-2">
+    <div class="acc-icon">🏆</div>
+    <div class="acc-val">4×</div>
+    <div class="acc-label">James Beard<br>Award Winner</div>
+  </div>
+  <div class="acc-item reveal reveal-delay-3">
+    <div class="acc-icon">🍷</div>
+    <div class="acc-val">Grand</div>
+    <div class="acc-label">Wine Spectator<br>Award</div>
+  </div>
+</div>
+
+<!-- CHEF -->
+<section class="chef" id="chef">
+  <div class="chef-visual">
+    <div class="chef-abstract">
+      <div class="chef-stroke"></div>
+      <div class="chef-stroke"></div>
+      <div class="chef-stroke"></div>
+      <div class="chef-stroke"></div>
+      <div class="chef-monogram">TA</div>
+    </div>
+  </div>
+  <div class="chef-content">
+    <p class="section-label reveal">The Kitchen</p>
+    <h2 class="reveal reveal-delay-1">Chef Thomas <em>Allan</em></h2>
+    <p class="chef-name reveal reveal-delay-1">Executive Chef · The Modern</p>
+    <p class="reveal reveal-delay-2">Promoted to Executive Chef in 2020, Thomas Allan has brought a new voice to The Modern — one defined by refined restraint and an instinct for the unexpected. His menus are rooted in seasonality and exceptional sourcing, elevated through technique and imagination.</p>
+    <p class="reveal reveal-delay-2">From the tasting room to the Kitchen Table, every dish is an exercise in balance: precision tempered by playfulness, luxury made approachable.</p>
+    <div class="chef-signature reveal reveal-delay-3">Thomas Allan</div>
+  </div>
+</section>
+
+<!-- HOURS -->
+<section class="hours" id="hours">
+  <div>
+    <p class="section-label reveal">Hours & Reservations</p>
+    <h2 class="reveal reveal-delay-1">Plan your <em>visit</em></h2>
+    <br><br>
+    <p style="font-family: var(--sans); font-size: 0.75rem; font-weight: 200; line-height: 1.9; color: var(--muted); max-width: 280px;" class="reveal reveal-delay-2">Museum admission is not required to dine with us. Reservations available up to 28 days in advance via Resy.</p>
+  </div>
+  <div class="hours-grid">
+    <div class="hours-block reveal">
+      <h4>The Modern — Lunch</h4>
+      <div class="hours-row"><span class="hours-day">Monday – Sunday</span><span class="hours-time">12:00 pm – 2:30 pm</span></div>
+    </div>
+    <div class="hours-block reveal reveal-delay-1">
+      <h4>The Modern — Dinner</h4>
+      <div class="hours-row"><span class="hours-day">Mon – Thu</span><span class="hours-time">5:00 pm – 9:00 pm</span></div>
+      <div class="hours-row"><span class="hours-day">Friday</span><span class="hours-time">5:00 pm – 9:30 pm</span></div>
+      <div class="hours-row"><span class="hours-day">Saturday</span><span class="hours-time">5:00 pm – 9:30 pm</span></div>
+      <div class="hours-row"><span class="hours-day">Sunday</span><span class="hours-time">5:00 pm – 9:00 pm</span></div>
+    </div>
+    <div class="hours-block reveal reveal-delay-2">
+      <h4>The Bar Room</h4>
+      <div class="hours-row"><span class="hours-day">Daily lunch</span><span class="hours-time">11:30 am – 3:00 pm</span></div>
+      <div class="hours-row"><span class="hours-day">Daily dinner</span><span class="hours-time">5:00 pm – 9:30 pm</span></div>
+    </div>
+    <div class="hours-block reveal reveal-delay-3">
+      <h4>The Terrace</h4>
+      <div class="hours-row"><span class="hours-day">Lunch</span><span class="hours-time">Reservations</span></div>
+      <div class="hours-row"><span class="hours-day">Dinner</span><span class="hours-time">Walk-ins welcome</span></div>
+      <div class="hours-row"><span class="hours-day">Season</span><span class="hours-time">Spring – Fall</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FIND US -->
+<section class="find-us" id="visit">
+  <div>
+    <p class="section-label reveal" style="--gold: rgba(184,150,90,0.8);">Location</p>
+    <h2 class="reveal reveal-delay-1">Find <em>us</em></h2>
+    <div class="contact-item reveal reveal-delay-2">
+      <span class="contact-label">Address</span>
+      <span class="contact-val">9 West 53rd Street, New York, NY 10019</span>
+    </div>
+    <div class="contact-item reveal reveal-delay-2">
+      <span class="contact-label">Phone</span>
+      <span class="contact-val"><a href="tel:+12123331220" style="color:inherit;text-decoration:none;">+1 212-333-1220</a></span>
+    </div>
+    <div class="contact-item reveal reveal-delay-3">
+      <span class="contact-label">Website</span>
+      <span class="contact-val"><a href="https://www.themodernnyc.com" target="_blank" style="color:inherit;text-decoration:none;">themodernnyc.com</a></span>
+    </div>
+    <div class="contact-item reveal reveal-delay-3">
+      <span class="contact-label">Reservations</span>
+      <span class="contact-val">Via Resy · Up to 28 days ahead</span>
+    </div>
+  </div>
+  <div class="map-placeholder reveal reveal-delay-2">
+    <!-- decorative grid lines -->
+    <div class="map-grid-line" style="width: 100%; height: 1px; top: 33%;"></div>
+    <div class="map-grid-line" style="width: 100%; height: 1px; top: 66%;"></div>
+    <div class="map-grid-line" style="width: 1px; height: 100%; left: 33%; top: 0;"></div>
+    <div class="map-grid-line" style="width: 1px; height: 100%; left: 66%; top: 0;"></div>
+    <div class="map-crosshair">
+      <div class="map-pulse"></div>
+      <div class="map-dot"></div>
+    </div>
+    <div class="map-label">9 W 53rd St · <span>New York</span></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band reveal">
+  <h2>Reserve your <em>table</em> tonight</h2>
+  <a href="https://resy.com" target="_blank" class="cta-btn">
+    Make a Reservation <span class="cta-btn-arrow"></span>
+  </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">The Modern</div>
+    <div class="footer-sub">
+      At the Museum of Modern Art<br>
+      9 W 53rd Street<br>
+      New York, NY 10019<br><br>
+      Part of Union Square<br>Hospitality Group<br>
+      Relais & Châteaux member
+    </div>
+  </div>
+  <div class="footer-links">
+    <h5>Experiences</h5>
+    <ul>
+      <li><a href="#">The Modern</a></li>
+      <li><a href="#">The Bar Room</a></li>
+      <li><a href="#">The Kitchen Table</a></li>
+      <li><a href="#">The Terrace</a></li>
+      <li><a href="#">Private Dining</a></li>
+    </ul>
+  </div>
+  <div class="footer-links">
+    <h5>Information</h5>
+    <ul>
+      <li><a href="#">Menus</a></li>
+      <li><a href="#">Wine Program</a></li>
+      <li><a href="#">Gift Cards</a></li>
+      <li><a href="#">Press</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 The Modern · Union Square Hospitality Group</span>
+    <span>+1 212-333-1220 · themodernnyc.com</span>
+  </div>
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+  function animRing() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.style.transform = 'translate(-50%,-50%) scale(2.5)'; ring.style.transform = 'translate(-50%,-50%) scale(1.5)'; ring.style.opacity = '0.3'; });
+    el.addEventListener('mouseleave', () => { cursor.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.transform = 'translate(-50%,-50%) scale(1)'; ring.style.opacity = '0.6'; });
+  });
+
+  // Scroll nav
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => io.observe(el));
+</script>
+</body>
+</html>
